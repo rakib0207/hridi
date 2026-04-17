@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Hridi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-pink: #ff4d6d;
+            --secondary-pink: #ff8fa3;
+            --dark-pink: #c9184a;
+            --bg-gradient: linear-gradient(135deg, #fff0f3 0%, #ffccd5 100%);
+            --text-color: #590d22;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+            perspective: 1200px;
+        }
+
+        .bokeh {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .light {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            filter: blur(25px);
+            will-change: transform;
+            animation: moveLight 25s infinite alternate linear;
+        }
+
+        @keyframes moveLight {
+            from { transform: translate(-15%, -15%); }
+            to { transform: translate(115%, 115%); }
+        }
+
+        /* Background Text */
+        .bg-text {
+            position: absolute;
+            top: 8%;
+            width: 100%;
+            text-align: center;
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(2.5rem, 10vw, 4.8rem);
+            color: var(--dark-pink);
+            font-weight: 600;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            opacity: 0.8;
+            z-index: -1;
+            padding: 0 15px;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .container.open ~ .bg-text {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        .container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            margin-top: 130px; /* Thik moto balance korar jonno */
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .envelope-wrapper {
+            position: relative;
+            width: 320px;
+            height: 220px;
+            background-color: var(--secondary-pink);
+            box-shadow: 0 20px 50px rgba(201, 24, 74, 0.3);
+            border-radius: 6px;
+            transform-style: preserve-3d;
+        }
+
+        .envelope-wrapper::before {
+            content: "";
+            position: absolute;
+            z-index: 4;
+            top: 0;
+            left: 0;
+            border-top: 120px solid var(--primary-pink);
+            border-left: 160px solid transparent;
+            border-right: 160px solid transparent;
+            transform-origin: top;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.2s 0.2s;
+        }
+
+        .envelope-wrapper::after {
+            content: "";
+            position: absolute;
+            z-index: 3;
+            width: 0;
+            height: 0;
+            border-top: 110px solid transparent;
+            border-left: 160px solid var(--secondary-pink);
+            border-right: 160px solid var(--secondary-pink);
+            border-bottom: 110px solid var(--secondary-pink);
+            bottom: 0;
+            left: 0;
+            border-radius: 0 0 6px 6px;
+        }
+
+        .heart {
+            position: absolute;
+            z-index: 5;
+            top: 50%;
+            left: 50%;
+            width: 45px;
+            height: 45px;
+            background-color: var(--dark-pink);
+            transform: translate(-50%, -10%) rotate(45deg);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            cursor: pointer;
+        }
+
+        .heart:before, .heart:after {
+            content: "";
+            position: absolute;
+            width: 45px;
+            height: 45px;
+            background-color: var(--dark-pink);
+            border-radius: 50%;
+        }
+
+        .heart:before { top: -22.5px; left: 0; }
+        .heart:after { left: -22.5px; top: 0; }
+
+        .letter {
+            position: absolute;
+            bottom: 5px;
+            left: 10px;
+            right: 10px;
+            height: 95%;
+            background: #fff;
+            background-image: linear-gradient(rgba(255, 229, 236, 0.5) 1px, transparent 1px);
+            background-size: 100% 25px;
+            border-radius: 8px;
+            z-index: 2;
+            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55), opacity 0.5s ease;
+            padding: 15px; /* Padding ektu komanu holo space barate */
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            opacity: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .letter h1 {
+            font-family: 'Great Vibes', cursive;
+            color: var(--dark-pink);
+            font-size: 1.8rem; /* Heading size ektu adjust kora holo jate baire na jay */
+            margin-bottom: 5px;
+            line-height: 1.2;
+        }
+
+        .letter-content {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.05rem; 
+            color: var(--text-color);
+            line-height: 1.3;
+            max-width: 100%;
+        }
+
+        .letter-content p {
+            margin-bottom: 4px;
+        }
+
+        .rakib-signature {
+            color: var(--primary-pink);
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 5px;
+            font-family: 'Dancing Script', cursive;
+        }
+
+        .container.open .envelope-wrapper::before {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+
+        .container.open .letter {
+            transform: translateY(-130px); /* Iktu height barano holo bhetore adjust korar jonno */
+            z-index: 6;
+            opacity: 1;
+            pointer-events: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            height: 155%; /* Letter area r-o boro kora holo */
+        }
+
+        .container.open .heart {
+            opacity: 0.2;
+            transform: translate(-50%, 90px) rotate(45deg) scale(0.5);
+        }
+
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            z-index: 100;
+            will-change: transform, opacity;
+            animation: floatHeart 3s ease-out forwards;
+        }
+
+        @keyframes floatHeart {
+            0% { transform: translateY(0) rotate(0deg) scale(0); opacity: 1; }
+            100% { transform: translateY(-400px) translateX(var(--rx)) rotate(var(--rot)) scale(0.8); opacity: 0; }
+        }
+
+        .instruction {
+            position: absolute;
+            bottom: 40px;
+            color: #fff;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 12px;
+            background: var(--dark-pink);
+            padding: 12px 28px;
+            border-radius: 40px;
+            box-shadow: 0 4px 15px rgba(201, 24, 74, 0.4);
+            transition: all 0.5s ease;
+            animation: bounce 2s infinite;
+        }
+
+        .container.open ~ .instruction {
+            opacity: 0;
+            transform: translateY(30px);
+            pointer-events: none;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bokeh" id="bokehContainer"></div>
+
+    <div class="container" id="envelopeContainer">
+        <div class="envelope-wrapper">
+            <div class="letter">
+                <h1>Happy Birthday Hridi</h1>
+                <div class="letter-content">
+                    <p>To the love of my life,</p>
+                    <p>Happy Birthday, my love 🎂❤️</p>
+                    <p>You are my happiness, my peace, and my everything. Thank you for making my life so beautiful.</p>
+                    <p>I hope this year brings you all the happiness you truly deserve.</p>
+                </div>
+                <div class="rakib-signature">
+                    ❤️ I love you forever,<br>Rakib
+                </div>
+            </div>
+        </div>
+        <div class="heart" id="heartBtn"></div>
+    </div>
+
+    <div class="bg-text">You are my whole world, Hridi</div>
+
+    <div class="instruction">Tap the heart to see my love</div>
+
+    <script>
+        const container = document.getElementById('envelopeContainer');
+        const heartBtn = document.getElementById('heartBtn');
+        const bokeh = document.getElementById('bokehContainer');
+        let isOpen = false;
+
+        const fragment = document.createDocumentFragment();
+        for(let i=0; i<15; i++) {
+            const light = document.createElement('div');
+            light.className = 'light';
+            const size = Math.random() * 120 + 60;
+            light.style.width = size + 'px';
+            light.style.height = size + 'px';
+            light.style.left = Math.random() * 100 + '%';
+            light.style.top = Math.random() * 100 + '%';
+            light.style.animationDelay = (Math.random() * 5) + 's';
+            light.style.animationDuration = (15 + Math.random() * 10) + 's';
+            fragment.appendChild(light);
+        }
+        bokeh.appendChild(fragment);
+
+        function toggleEnvelope(e) {
+            e.stopPropagation();
+            if(e.type === 'touchstart') e.preventDefault();
+            
+            isOpen = !isOpen;
+            
+            if (isOpen) {
+                container.classList.add('open');
+                spawnHearts();
+            } else {
+                container.classList.remove('open');
+            }
+        }
+
+        heartBtn.addEventListener('click', toggleEnvelope);
+        heartBtn.addEventListener('touchstart', toggleEnvelope, {passive: false});
+
+        function spawnHearts() {
+            const emojis = ['❤️', '💖', '🌹', '✨', '🎈'];
+            for (let i = 0; i < 25; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'particle';
+                    heart.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+                    const randomX = (Math.random() * 200 - 100) + 'px';
+                    const randomRotation = (Math.random() * 360) + 'deg';
+                    heart.style.left = (Math.random() * 100) + 'vw';
+                    heart.style.top = '80vh';
+                    heart.style.setProperty('--rx', randomX);
+                    heart.style.setProperty('--rot', randomRotation);
+                    heart.style.fontSize = (Math.random() * 10 + 20) + 'px';
+                    document.body.appendChild(heart);
+                    setTimeout(() => heart.remove(), 3000);
+                }, i * 70);
+            }
+        }
+    </script>
+</body>
+</html>
