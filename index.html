@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Happy Birthday Hridi</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Great+Vibes&family=Poppins:wght@300;400;600&family=Hind+Siliguri:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-pink: #ff4d6d;
@@ -27,6 +27,7 @@
             height: -webkit-fill-available;
             width: 100vw;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             overflow: hidden;
@@ -62,7 +63,6 @@
             to { transform: translate(115%, 115%); }
         }
 
-        /* Background Text - Fixed visibility logic */
         .bg-text {
             position: absolute;
             top: 12%;
@@ -79,7 +79,6 @@
             transition: opacity 0.6s ease, transform 0.6s ease;
         }
 
-        /* This ensures the text vanishes when .open is added to the container */
         .container.open ~ .bg-text {
             opacity: 0 !important;
             transform: translateY(-30px);
@@ -92,7 +91,7 @@
             justify-content: center;
             align-items: center;
             z-index: 10;
-            margin-top: 10vh;
+            margin-top: 5vh;
             transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             width: 100%;
             max-width: 350px;
@@ -238,9 +237,42 @@
         }
 
         .container.open .heart {
-            opacity: 0.6; /* Higher opacity to remain visible for clicking to close */
+            opacity: 0.6;
             transform: translate(-50%, 100px) rotate(45deg) scale(0.6);
-            z-index: 12; /* Keep above everything to allow closing */
+            z-index: 12;
+        }
+
+        .typing-wrapper {
+            margin-top: 40px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 60px;
+            z-index: 15;
+            text-align: center;
+            padding: 0 10px;
+        }
+
+        .typing-text {
+            font-family: 'Hind Siliguri', sans-serif;
+            font-weight: 600;
+            font-size: clamp(1.1rem, 5vw, 1.6rem);
+            color: var(--dark-pink);
+            display: none;
+            max-width: 90vw;
+            line-height: 1.4;
+        }
+
+        .typing-active::after {
+            content: '|';
+            animation: blink 0.7s infinite;
+            margin-left: 5px;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
         }
 
         .particle {
@@ -308,6 +340,10 @@
         <div class="heart" id="heartBtn"></div>
     </div>
 
+    <div class="typing-wrapper">
+        <div class="typing-text" id="mainTypingArea"></div>
+    </div>
+
     <div class="bg-text">You are my whole world, Hridi</div>
 
     <div class="instruction">Tap the heart to see my love</div>
@@ -316,10 +352,19 @@
         const container = document.getElementById('envelopeContainer');
         const heartBtn = document.getElementById('heartBtn');
         const bokeh = document.getElementById('bokehContainer');
+        const typingArea = document.getElementById('mainTypingArea');
+        
         let isOpen = false;
+        let isTyping = false;
 
+        const messages = [
+            "ভালোবাসি তোমায় অনেক",
+            "তুমি আমার জীবনের সবচেয়ে সুন্দর অনুভূতি",
+            "শুভ জন্মদিন"
+        ];
+
+        // Background setup
         const lightCount = window.innerWidth < 500 ? 10 : 15;
-        const fragment = document.createDocumentFragment();
         for(let i=0; i < lightCount; i++) {
             const light = document.createElement('div');
             light.className = 'light';
@@ -330,25 +375,102 @@
             light.style.top = Math.random() * 100 + '%';
             light.style.animationDelay = (Math.random() * 5) + 's';
             light.style.animationDuration = (15 + Math.random() * 10) + 's';
-            fragment.appendChild(light);
+            bokeh.appendChild(light);
         }
-        bokeh.appendChild(fragment);
+
+        function typeText(element, message, speed = 180) {
+            return new Promise(resolve => {
+                let i = 0;
+                element.style.display = "block";
+                element.classList.add('typing-active');
+                element.textContent = "";
+                
+                const interval = setInterval(() => {
+                    if (!isOpen) {
+                        clearInterval(interval);
+                        resolve();
+                        return;
+                    }
+                    if (i < message.length) {
+                        element.textContent += message.charAt(i);
+                        i++;
+                    } else {
+                        clearInterval(interval);
+                        element.classList.remove('typing-active');
+                        resolve();
+                    }
+                }, speed);
+            });
+        }
+
+        function eraseText(element, speed = 60) {
+            return new Promise(resolve => {
+                let text = element.textContent;
+                element.classList.add('typing-active');
+                
+                const interval = setInterval(() => {
+                    if (!isOpen || text.length === 0) {
+                        clearInterval(interval);
+                        element.classList.remove('typing-active');
+                        resolve();
+                        return;
+                    }
+                    text = text.slice(0, -1);
+                    element.textContent = text;
+                }, speed);
+            });
+        }
+
+        async function startTextSequence() {
+            if (isTyping) return;
+            isTyping = true;
+            
+            for (let i = 0; i < messages.length; i++) {
+                if (!isOpen) break;
+                
+                // টাইপ করো
+                await typeText(typingArea, messages[i], 180);
+                if (!isOpen) break;
+                
+                // কিছুক্ষণ থামো (১.৫ সেকেন্ড)
+                await new Promise(r => setTimeout(r, 1500));
+                if (!isOpen) break;
+                
+                // শুধু শেষ লাইনের ক্ষেত্রে মুছবে না (অপশনাল, তুমি চাইলে মুছতেও পারো)
+                if (i < messages.length - 1) {
+                    await eraseText(typingArea, 60);
+                    await new Promise(r => setTimeout(r, 500));
+                }
+            }
+            
+            isTyping = false;
+        }
+
+        function resetEverything() {
+            isOpen = false;
+            isTyping = false;
+            container.classList.remove('open');
+            typingArea.style.display = "none";
+            typingArea.textContent = "";
+            typingArea.classList.remove('typing-active');
+        }
 
         function toggleEnvelope(e) {
             e.stopPropagation();
             if(e.type === 'touchstart') e.preventDefault();
             
-            isOpen = !isOpen;
-            
-            if (isOpen) {
+            if (!isOpen) {
+                isOpen = true;
                 container.classList.add('open');
                 spawnHearts();
+                setTimeout(() => {
+                    if(isOpen) startTextSequence();
+                }, 800);
             } else {
-                container.classList.remove('open');
+                resetEverything();
             }
         }
 
-        // Only toggle via the heart button now
         heartBtn.addEventListener('click', toggleEnvelope);
         heartBtn.addEventListener('touchstart', toggleEnvelope, {passive: false});
 
@@ -357,6 +479,7 @@
             const count = window.innerWidth < 500 ? 18 : 25;
             for (let i = 0; i < count; i++) {
                 setTimeout(() => {
+                    if(!isOpen) return;
                     const heart = document.createElement('div');
                     heart.className = 'particle';
                     heart.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
