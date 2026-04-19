@@ -65,11 +65,11 @@
 
         .bg-text {
             position: absolute;
-            top: 12%;
+            top: 8%;
             width: 100%;
             text-align: center;
             font-family: 'Great Vibes', cursive;
-            font-size: clamp(2.2rem, 10vw, 5rem);
+            font-size: clamp(1.8rem, 7vw, 4rem);
             color: var(--dark-pink);
             font-weight: 600;
             text-shadow: 2px 2px 8px rgba(201, 24, 74, 0.2);
@@ -81,7 +81,7 @@
 
         .container.open ~ .bg-text {
             opacity: 0 !important;
-            transform: translateY(-30px);
+            transform: translateY(-20px);
             pointer-events: none;
         }
 
@@ -91,7 +91,7 @@
             justify-content: center;
             align-items: center;
             z-index: 10;
-            margin-top: 5vh;
+            margin-top: 12vh;
             transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             width: 100%;
             max-width: 350px;
@@ -110,8 +110,8 @@
 
         @media (min-width: 400px) {
             .envelope-wrapper {
-                width: 320px;
-                height: 220px;
+                width: 310px;
+                height: 210px;
             }
         }
 
@@ -130,9 +130,9 @@
 
         @media (min-width: 400px) {
             .envelope-wrapper::before {
-                border-top: 120px solid var(--primary-pink);
-                border-left: 160px solid transparent;
-                border-right: 160px solid transparent;
+                border-top: 115px solid var(--primary-pink);
+                border-left: 155px solid transparent;
+                border-right: 155px solid transparent;
             }
         }
 
@@ -185,14 +185,14 @@
             bottom: 5px;
             left: 10px;
             right: 10px;
-            height: 90%;
+            height: 85%;
             background: #fff;
             background-image: linear-gradient(rgba(255, 229, 236, 0.5) 1px, transparent 1px);
             background-size: 100% 22px;
             border-radius: 8px;
             z-index: 5;
             transition: transform 0.7s ease-in-out, opacity 0.4s ease, height 0.7s ease;
-            padding: 15px;
+            padding: 12px;
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -207,57 +207,61 @@
         .letter h1 {
             font-family: 'Great Vibes', cursive;
             color: var(--dark-pink);
-            font-size: clamp(1.5rem, 6vw, 2rem);
-            margin-bottom: 8px;
+            font-size: clamp(1.2rem, 5vw, 1.6rem);
+            margin-bottom: 5px;
             line-height: 1.1;
         }
 
         .letter-content {
             font-family: 'Dancing Script', cursive;
-            font-size: clamp(1rem, 4.5vw, 1.15rem);
+            font-size: clamp(0.85rem, 4vw, 1.05rem);
             color: var(--text-color);
-            line-height: 1.4;
+            line-height: 1.3;
             width: 100%;
+        }
+
+        .letter-content p {
+            margin-bottom: 4px;
         }
 
         .rakib-signature {
             color: var(--primary-pink);
             font-weight: bold;
-            font-size: clamp(1rem, 4.5vw, 1.2rem);
-            margin-top: 10px;
+            font-size: clamp(0.9rem, 4vw, 1.1rem);
+            margin-top: 5px;
             font-family: 'Dancing Script', cursive;
         }
 
         .container.open .letter {
-            transform: translateY(-45%);
+            transform: translateY(-35%); /* Safe height for mobile */
             opacity: 1;
             pointer-events: auto;
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            height: 150%; 
+            height: 135%; 
         }
 
         .container.open .heart {
             opacity: 0.6;
-            transform: translate(-50%, 100px) rotate(45deg) scale(0.6);
+            transform: translate(-50%, 90px) rotate(45deg) scale(0.6);
             z-index: 12;
         }
 
         .typing-wrapper {
-            margin-top: 40px;
+            margin-top: 25px;
             width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 60px;
+            min-height: 50px;
             z-index: 15;
             text-align: center;
-            padding: 0 10px;
+            padding: 0 20px;
         }
 
         .typing-text {
             font-family: 'Hind Siliguri', sans-serif;
             font-weight: 600;
-            font-size: clamp(1.1rem, 5vw, 1.6rem);
+            font-size: clamp(1rem, 4.8vw, 1.4rem);
             color: var(--dark-pink);
             display: none;
             max-width: 90vw;
@@ -290,14 +294,14 @@
 
         .instruction {
             position: absolute;
-            bottom: 6vh;
+            bottom: 4vh;
             color: #fff;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 1px;
-            font-size: 11px;
+            font-size: 10px;
             background: var(--dark-pink);
-            padding: 10px 24px;
+            padding: 10px 20px;
             border-radius: 40px;
             box-shadow: 0 4px 15px rgba(201, 24, 74, 0.4);
             animation: bounce 2s infinite;
@@ -403,7 +407,7 @@
             });
         }
 
-        function eraseText(element, speed = 60) {
+        function eraseText(element, speed = 80) {
             return new Promise(resolve => {
                 let text = element.textContent;
                 element.classList.add('typing-active');
@@ -428,18 +432,15 @@
             for (let i = 0; i < messages.length; i++) {
                 if (!isOpen) break;
                 
-                // টাইপ করো
                 await typeText(typingArea, messages[i], 180);
                 if (!isOpen) break;
                 
-                // কিছুক্ষণ থামো (১.৫ সেকেন্ড)
-                await new Promise(r => setTimeout(r, 1500));
+                await new Promise(r => setTimeout(r, 1600));
                 if (!isOpen) break;
                 
-                // শুধু শেষ লাইনের ক্ষেত্রে মুছবে না (অপশনাল, তুমি চাইলে মুছতেও পারো)
                 if (i < messages.length - 1) {
-                    await eraseText(typingArea, 60);
-                    await new Promise(r => setTimeout(r, 500));
+                    await eraseText(typingArea, 70);
+                    await new Promise(r => setTimeout(r, 600));
                 }
             }
             
@@ -465,7 +466,7 @@
                 spawnHearts();
                 setTimeout(() => {
                     if(isOpen) startTextSequence();
-                }, 800);
+                }, 900);
             } else {
                 resetEverything();
             }
@@ -476,7 +477,7 @@
 
         function spawnHearts() {
             const emojis = ['❤️', '💖', '🌹', '✨', '🎈'];
-            const count = window.innerWidth < 500 ? 18 : 25;
+            const count = window.innerWidth < 500 ? 15 : 25;
             for (let i = 0; i < count; i++) {
                 setTimeout(() => {
                     if(!isOpen) return;
@@ -492,7 +493,7 @@
                     heart.style.fontSize = (Math.random() * 8 + 18) + 'px';
                     document.body.appendChild(heart);
                     setTimeout(() => heart.remove(), 3000);
-                }, i * 80);
+                }, i * 100);
             }
         }
     </script>
